@@ -61,7 +61,7 @@
     <div class="container">
       <div id="flash">
         <?php
-            if(isset($_SESSION['flashMessage'] && $_SESSION['flashMessage'] != "")) {
+            if(isset($_SESSION['flashMessage']) && $_SESSION['flashMessage'] != "") {
                 echo $_SESSION['flashMessage'];
             }
         ?>
