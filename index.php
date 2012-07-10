@@ -59,7 +59,13 @@
 
 	<!-- Main content starts here -->
     <div class="container">
-
+      <div id="flash">
+        <?php
+            if(isset($_SESSION['flashMessage'] && $_SESSION['flashMessage'] != "")) {
+                echo $_SESSION['flashMessage'];
+            }
+        ?>
+      </div>
       <h1>Fusionforge Task Importer</h1>
       <p>Use this tool to quickly bulk import tasks</p>
       <?php

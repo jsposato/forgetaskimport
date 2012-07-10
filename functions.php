@@ -28,12 +28,14 @@ function doLogin($soapObj,$user,$password) {
  * @author John Sposato
  */
 function doLogout($soapObj,$sessionKey) {
+    $result = "";
+
 	try {
 		$result = $soapObj->logout($sessionKey);
-		print "Logout response: ".$result."<br>";
 	} catch (Exception $e) {
 		echo "Exception on Logout: ".$e->getMessage();
 	}
+	return $result;
 }
 
 function getUploadFile($files) {
