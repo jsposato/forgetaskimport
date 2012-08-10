@@ -8,6 +8,8 @@
 
 	// logout
 	$result = doLogout($soapClient,$_SESSION['sessionId']);
+	$_SESSION['sessionId'] = "";
+
 	$_SESSION['flashMessage'] = $result;
 	
 	header('Location:index.php');

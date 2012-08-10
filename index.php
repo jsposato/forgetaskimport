@@ -64,6 +64,9 @@
             if(isset($_SESSION['flashMessage']) && $_SESSION['flashMessage'] != "") {
                 echo $_SESSION['flashMessage'];
             }
+            echo "<pre>";
+            print_r($_SESSION);
+            echo "</pre>";
         ?>
       </div>
       <h1>Fusionforge Task Importer</h1>

@@ -9,11 +9,12 @@ include_once "functions.php";
 		//$password 			= 'codiesassy';
 		
 		// setup the soap client
-		$forge_soap_url = "https://forge.ctrip.ufl.edu:443/soap/index.php?wsdl";
+		$forge_soap_url = "https://forge.ctrip.ufl.edu/soap/index.php?wsdl";
 		$soapClient = new SoapClient($forge_soap_url);
 		
 		// check to see if we can login
 		$sessionKey = doLogin($soapClient,$user,$password);
+		
 		if($sessionKey != null) {
 			$_SESSION['sessionId'] = $sessionKey;
 			header("Location:import.php");
