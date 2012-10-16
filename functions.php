@@ -28,31 +28,33 @@ function doLogin($soapObj,$user,$password) {
  * @author John Sposato
  */
 function doLogout($soapObj,$sessionKey) {
+    $result = "";
+
 	try {
 		$result = $soapObj->logout($sessionKey);
-		print "Logout response: ".$result."<br>";
 	} catch (Exception $e) {
 		echo "Exception on Logout: ".$e->getMessage();
 	}
+	return $result;
 }
 
 function getUploadFile($files) {
-	print_r($files);
+// 	print_r($files);
 	// Configuration - Your Options
     $allowed_filetypes = array('.csv','.txt'); // These will be the types of file that will pass the validation.
     $max_filesize = 1024000; // Maximum filesize in BYTES (currently 1MB).
     $upload_path = './files/'; // The place the files will be uploaded to (currently a 'files' directory).
  
-	$filename = $files['importFile']['name']; // Get the name of the file (including file extension).
+	$filename = $files['file']['name']; // Get the name of the file (including file extension).
 	$ext = substr($filename, strpos($filename,'.'), strlen($filename)-1); // Get the extension from the filename.
- 	echo "Extension: ".$ext;
+//  	echo "Extension: ".$ext;
 	// Check if the filetype is allowed, if not DIE and inform the user.
 	if(!in_array($ext,$allowed_filetypes)) {
     	die('The file you attempted to upload is not allowed.');
 	}
 	
     // Now check the filesize, if it is too large then DIE and inform the user.
-    if(filesize($files['importFile']['tmp_name']) > $max_filesize) {
+    if(filesize($files['file']['tmp_name']) > $max_filesize) {
     	die('The file you attempted to upload is too large.');
     }
  
@@ -62,8 +64,8 @@ function getUploadFile($files) {
     }
  
     // Upload the file to your specified path.
-    if(move_uploaded_file($files['importFile']['tmp_name'],$upload_path . $filename)) {
-    	echo 'Your file upload was successful, view the file <a href="' . $upload_path . $filename . '" title="Your File">here</a>'; // It worked.
+    if(move_uploaded_file($files['file']['tmp_name'],$upload_path . $filename)) {
+//     	echo 'Your file upload was successful, view the file <a href="' . $upload_path . $filename . '" title="Your File">here</a>'; // It worked.
     } else {
     	echo 'There was an error during the file upload.  Please try again.'; // It failed :(.
     }
