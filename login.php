@@ -1,4 +1,7 @@
 <?php
+// start the session
+session_start();
+
 include_once "functions.php";
 	if(isset($_POST['submit'])) {
 		

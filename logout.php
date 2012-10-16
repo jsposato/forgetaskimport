@@ -1,6 +1,7 @@
-<?php 
-	include_once 'functions.php';
+<?php
+	// Start the session 
 	session_start();
+	include_once 'functions.php';
 
 	// setup the soap client
 	$forge_soap_url = "https://forge.ctrip.ufl.edu:443/soap/index.php?wsdl";
