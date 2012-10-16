@@ -10,7 +10,8 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li class="active"><a href="index.php">Home</a></li>
-              <li><a href="import.php">Import</a></li>
+              <li><a href="importStories.php">Import Stories</a></li>
+              <li><a href="importTasks.php">Import Tasks</a></li>
               <li><a href="logout.php">Logout</a></li>
             </ul>
           </div><!--/.nav-collapse -->
