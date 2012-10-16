@@ -19,6 +19,7 @@ include_once "functions.php";
 			$_SESSION['sessionId'] = $sessionKey;
 			header("Location:import.php");
 		} else {
+			$_SESSION['flashMessage'] = "Error logging in";
 			header("Location:index.php");
 		}
 	}
