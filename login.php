@@ -8,8 +8,6 @@ include_once "functions.php";
 		// get credentials to login
 		$user 				= htmlspecialchars($_POST['username']);
 		$password 			= htmlspecialchars($_POST['password']);
-		//$user 				= 'jsposato';
-		//$password 			= 'codiesassy';
 		
 		// setup the soap client
 		$forge_soap_url = "https://forge.ctrip.ufl.edu/soap/index.php?wsdl";

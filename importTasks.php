@@ -11,6 +11,7 @@
 
 	// INCLUDE FILES 
 	include_once 'functions.php';
+	include_once 'includes/db.inc';
 	
 	if(isset($_POST['submit'])) {
 		// setup the soap client
@@ -35,6 +36,8 @@
 		$arrDependentOn		= 0;
 		$intDuration		= 0; // Not sure what this is for
 		$intParentId		= 0;
+		$trackerId			= 0;
+		$taskId				= 0;
 		
   		//echo "<pre>";
 		//print_r($_FILES);
@@ -89,37 +92,30 @@
  			//print_r($line);
  			//echo "</pre>";
  	
-			try {
-				$taskId = $soapClient->addProjectTask($_SESSION['sessionId'],
-													$intGroupId,
-													$intGroupProjectId,
-													$strSummary,
-													$strDetails,
-													$intPriority,
-													$intHours,
-													$intStartDate,
-													$intEndDate,
-													$intCategoryId,
-													$intPercentComplete,
-													$arrAssignedTo,
-													$arrDependentOn,
-													$intDuration,
-													$intParentId);
-  				//echo "Task # ".$taskId." created<br>";
-			} catch (Exception $e) {
-				echo $e->getMessage();
-			}
+			$taskId = $soapClient->addProjectTask($_SESSION['sessionId'],
+												$intGroupId,
+												$intGroupProjectId,
+												$strSummary,
+												$strDetails,
+												$intPriority,
+												$intHours,
+												$intStartDate,
+												$intEndDate,
+												$intCategoryId,
+												$intPercentComplete,
+												$arrAssignedTo,
+												$arrDependentOn,
+												$intDuration,
+												$intParentId);
+			//echo "Task # ".$taskId." created<br>";
 			
 			// TODO this should be compartmentalized and called
 			// Create tracker to task linkage
 			$query = "INSERT INTO project_task_artifact VALUES($taskId,$trackerId)";
-			
-			echo"<h4>".$lineCount." task(s) processed</h4>";
+			if(!$db->query($query)) {
+				echo "Error creating tracker linkage from tracker $trackerId to task $taskId<br>";
+			}			
 		}
-
-		// TODO this should be compartmentalized and called
-		// Create tracker to task linkage
-		$query = "INSERT INTO project_task_artifact VALUES($taskId,$trackerId)"
 		echo"<h4>".$lineCount." task(s) processed</h4>";
 		
 		// close file
@@ -177,9 +173,9 @@
             if(isset($_SESSION['flashMessage']) && $_SESSION['flashMessage'] != "") {
                 echo $_SESSION['flashMessage'];
             }
-            echo "<pre>";
-            print_r($_SESSION);
-            echo "</pre>";
+            //echo "<pre>";
+            //print_r($_SESSION);
+            //echo "</pre>";
         ?>
       </div>
 

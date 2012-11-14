@@ -12,4 +12,7 @@
 	
 	$groupNames = array("ICHP Texas WIN Project","UF-FSU HRA Study");
 	$groups = $soapClient->getGroupsByName($_SESSION['sessionId'],$groupNames);
+	echo "<pre>";
+	print_r($groups);
+	echo "</pre>";
 ?>
