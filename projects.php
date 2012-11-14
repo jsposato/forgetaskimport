@@ -1,7 +1,18 @@
-<?php 
+<?php
+	ini_set ("display_errors", "1");
+	error_reporting(E_ALL);
+
 	session_start();
+	if(!isset($_SESSION['sessionId'])) {
+		header('Location: index.php');
+	}
+
+	// INCLUDE FILES 
+	include_once 'functions.php';
+	include_once 'includes/db.inc';
+	
 	if(isset($_SESSION['sessionID'])) {
-		header('Location: importTasks.php');
+		header('Location: index.php');
 	}
 ?>
 <!DOCTYPE html>
@@ -46,38 +57,23 @@
             if(isset($_SESSION['flashMessage']) && $_SESSION['flashMessage'] != "") {
                 echo $_SESSION['flashMessage'];
             }
-            //echo "<pre>";
-            //print_r($_SESSION);
-            //echo "</pre>";
+ 
+ 			$projectsQuery = "SELECT group_id,group_name FROM groups ORDER BY group_name ASC";
+			$projects = $db->get_results($projectsQuery,ARRAY_A);
         ?>
       </div>
+
       <h1>Fusionforge Task Importer</h1>
-      <p>Use this tool to quickly bulk import tasks</p>
-      <?php
-      	if(isset($_SESSION['sessionId']) && $_SESSION['sessionId'] != "") {
-      	
-      ?>
-      <h3>Miscellaneuos Tools to Help You</h3>
-      <ul>
-      	<li><a href="myprojects.php" target="_blank">My Projects (Not Ready)</a></li>
-      	<li><a href="projects.php" target="_blank">Projects/Subprojects (Not Ready)</a></li>
-      </ul>
-      <!-- Content if logged in -->
-      <?php 
-      	} else {
-      ?>
-      <!-- the form that uploads the file.  username & password necessary to login to the forge -->
-      <form class="well" name="importer" enctype="multipart/form-data" action="login.php" method="post">
-          <label>Username</label>
-          <input type="text" name="username" class="span3" placeholder="Enter your username" size="10" maxlength="25">
-          <label>Password</label>
-          <input type="password" name="password" class="span3" placeholder="Enter your password" size="10" maxlength="25">
-		  <label></label>
-		  <input type="submit" name="submit" value="Login" class="btn">
-      </form>
-	  <?php
-      	} 
-	  ?>
+      <div>
+      	<select name="projects" id="projects">
+      	<?php
+      		foreach($projects as $project) {
+      			echo "<option value='$project[group_id]'>$project[group_id] - $project[group_name]</option>";
+      		}
+      	?>
+      	</select>
+      </div>
+
     </div> <!-- /container -->
 
     <!-- Le javascript
