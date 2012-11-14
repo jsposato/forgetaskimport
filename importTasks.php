@@ -1,6 +1,6 @@
 <?php
 	//TODO Change to tasks only (trackers/artifacts)
-
+	ini_set("auto_detect_line_endings", "1");
 	ini_set ("display_errors", "1");
 	error_reporting(E_ALL);
 
@@ -18,7 +18,7 @@
 		$soapClient = new SoapClient($forge_soap_url);
 		
 		//print "isLoggedIn?: ".isLoggedIn($_SESSION['sessionId'])."<br>";
-//  		print "Forge API Version: ".$soapClient->version()."<br>";
+		//print "Forge API Version: ".$soapClient->version()."<br>";
 	
 		// Init variables
 		$intGroupId 		= 0;
@@ -36,24 +36,34 @@
 		$intDuration		= 0; // Not sure what this is for
 		$intParentId		= 0;
 		
-//  		echo "<pre>";
-// 		print_r($_FILES);
-// 		echo "</pre>";
+  		//echo "<pre>";
+		//print_r($_FILES);
+ 		//echo "</pre>";
 
   		$file 				= getUploadFile($_FILES);
 		
 		// open the file for reading
-		$filehandle = fopen($file,"r");
+		try {
+			$filehandle = fopen($file,"r");			
+		} catch (exception $e) {
+			echo ($e->getMessage());
+		}
 		
 		// To keep track of how many tasks we process
 		$lineCount = 0;
+		//echo "<h4>Before Loop: $lineCount</h4>";
+		//echo "<h4>File Handle: $filehandle</h4>";
 		
 		// read until end of file
 		while($line=fgetcsv($filehandle)) {
+			//echo "<pre>";
+			//print_r($line);
+			//echo "</pre>";
 			// skip the header line
 			if("group_id" == $line[0]) {
 				continue;
 			}
+			//echo "<h4>$lineCount</h4>";
 			$lineCount++;
 			
 			$intGroupId 		= $line[0];
@@ -64,19 +74,20 @@
 			$intHours			= $line[5];
 			$intStartDate		= strtotime($line[6]." 12:00:00");
 			$intEndDate			= strtotime($line[7]." 23:59:59");
-			// if there's not category, set the default of 100 ('None')
+			// if there's no category, set the default of 100 ('None')
 			$intCategoryId		= ("" == $line[8]) ? 100:$line[8];
 			$intPercentComplete	= $line[9];
 			$arrAssignedTo		= explode("|",$line[10]);
 			$arrDependentOn		= explode("|",$line[11]);
 			$intDuration		= 0; // Not sure what this is for
 			$intParentId		= $line[13];
+			$trackerId			= $line[14];
  			
-// 			echo $intStartDate."<br>";
-// 			echo $intEndDate."<br>";
-// 			echo "<pre>";
-// 			print_r($line);
-// 			echo "</pre>";
+ 			//echo $intStartDate."<br>";
+ 			//echo $intEndDate."<br>";
+ 			//echo "<pre>";
+ 			//print_r($line);
+ 			//echo "</pre>";
  	
 			try {
 				$taskId = $soapClient->addProjectTask($_SESSION['sessionId'],
@@ -94,11 +105,21 @@
 													$arrDependentOn,
 													$intDuration,
 													$intParentId);
-//  				echo "Task # ".$taskId." created<br>";
+  				//echo "Task # ".$taskId." created<br>";
 			} catch (Exception $e) {
 				echo $e->getMessage();
 			}
+			
+			// TODO this should be compartmentalized and called
+			// Create tracker to task linkage
+			$query = "INSERT INTO project_task_artifact VALUES($taskId,$trackerId)";
+			
+			echo"<h4>".$lineCount." task(s) processed</h4>";
 		}
+
+		// TODO this should be compartmentalized and called
+		// Create tracker to task linkage
+		$query = "INSERT INTO project_task_artifact VALUES($taskId,$trackerId)"
 		echo"<h4>".$lineCount." task(s) processed</h4>";
 		
 		// close file
@@ -174,7 +195,7 @@
       	//} else {
       ?>
       <!-- the form that uploads the file.  username & password necessary to login to the forge -->
-      <form class="well" name="importer" enctype="multipart/form-data" action="import.php" method="post">
+      <form class="well" name="importer" enctype="multipart/form-data" action="importTasks.php" method="post">
           <label>File to Import</label>
           <input type="file" name="file" class="span3">
 		  <label></label>
