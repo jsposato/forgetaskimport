@@ -1,7 +1,7 @@
 <?php 
 	session_start();
 	if(isset($_SESSION['sessionID'])) {
-		header('Location: import.php');
+		header('Location: importTasks.php');
 	}
 ?>
 <!DOCTYPE html>
