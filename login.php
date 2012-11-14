@@ -18,7 +18,7 @@ include_once "functions.php";
 		
 		if($sessionKey != null) {
 			$_SESSION['sessionId'] = $sessionKey;
-			header("Location:import.php");
+			header("Location:importTasks.php");
 		} else {
 			$_SESSION['flashMessage'] = "Error logging in";
 			header("Location:index.php");

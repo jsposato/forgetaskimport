@@ -2,6 +2,7 @@
 	//TODO Change to tasks only (trackers/artifacts)
 	ini_set("auto_detect_line_endings", "1");
 	ini_set ("display_errors", "1");
+	set_time_limit(120);
 	error_reporting(E_ALL);
 
 	session_start();
@@ -38,6 +39,7 @@
 		$intParentId		= 0;
 		$trackerId			= 0;
 		$taskId				= 0;
+		$importedTasks		= array();
 		
   		//echo "<pre>";
 		//print_r($_FILES);
@@ -108,6 +110,11 @@
 												$intDuration,
 												$intParentId);
 			//echo "Task # ".$taskId." created<br>";
+			$importedTasks[$lineCount]['taskId'] = $taskId;
+			$importedTasks[$lineCount]['trackerId'] = $trackerId;
+			$importedTasks[$lineCount]['groupId'] = $intGroupId;
+			$importedTasks[$lineCount]['groupProjectId'] = $intGroupProjectId;
+			$importedTasks[$lineCount]['summary'] = $strSummary;
 			
 			// TODO this should be compartmentalized and called
 			// Create tracker to task linkage
@@ -199,6 +206,11 @@
       </form>
 	  <?php
       	//} 
+      	if(isset($importedTasks)) {
+      		echo "<pre>";
+			print_r($importedTasks);
+			echo "</pre>";
+      	}
 	  ?>
     </div> <!-- /container -->
 
@@ -206,18 +218,6 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery.js"></script>
-    <script src="js/bootstrap-transition.js"></script>
-    <script src="js/bootstrap-alert.js"></script>
-    <script src="js/bootstrap-modal.js"></script>
-    <script src="js/bootstrap-dropdown.js"></script>
-    <script src="js/bootstrap-scrollspy.js"></script>
-    <script src="js/bootstrap-tab.js"></script>
-    <script src="js/bootstrap-tooltip.js"></script>
-    <script src="js/bootstrap-popover.js"></script>
-    <script src="js/bootstrap-button.js"></script>
-    <script src="js/bootstrap-collapse.js"></script>
-    <script src="js/bootstrap-carousel.js"></script>
-    <script src="js/bootstrap-typeahead.js"></script>
-
+    <script src="js/bootstrap.min.js"></script>
   </body>
 </html>
