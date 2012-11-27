@@ -1,5 +1,4 @@
 <?php
-	//TODO Change to tasks only (trackers/artifacts)
 	ini_set("auto_detect_line_endings", "1");
 	ini_set ("display_errors", "1");
 	set_time_limit(120);
@@ -24,22 +23,12 @@
 	
 		// Init variables
 		$intGroupId 		= 0;
-		$intGroupProjectId 	= 0;
+		$intGroupArtifactId = 0;
+		$intStatusId		= 0;
+		$intPriority		= 0;
+		$intAssignedTo		= 0;
 		$strSummary			= "";
 		$strDetails			= "";
-		$intPriority		= 0;
-		$intHours			= 0;
-		$intStartDate		= 0;
-		$intEndDate			= 0;
-		$intCategoryId		= 0;
-		$intPercentComplete	= 0;
-		$arrAssignedTo		= 0;
-		$arrDependentOn		= 0;
-		$intDuration		= 0; // Not sure what this is for
-		$intParentId		= 0;
-		$trackerId			= 0;
-		$taskId				= 0;
-		$importedTasks		= array();
 		
   		//echo "<pre>";
 		//print_r($_FILES);
@@ -72,58 +61,41 @@
 			$lineCount++;
 			
 			$intGroupId 		= $line[0];
-			$intGroupProjectId 	= $line[1];
+			$intGroupArtifactId = $line[1];
 			$strSummary			= $line[2];
 			$strDetails			= $line[3];
 			$intPriority		= $line[4];
-			$intHours			= $line[5];
-			$intStartDate		= strtotime($line[6]." 12:00:00");
-			$intEndDate			= strtotime($line[7]." 23:59:59");
-			// if there's no category, set the default of 100 ('None')
-			$intCategoryId		= ("" == $line[8]) ? 100:$line[8];
-			$intPercentComplete	= $line[9];
-			$arrAssignedTo		= explode("|",$line[10]);
-			$arrDependentOn		= explode("|",$line[11]);
-			$intDuration		= $line[12]; // Not sure what this is for
-			$intParentId		= $line[13];
-			$trackerId			= $line[14];
- 			
- 			//echo $intStartDate."<br>";
- 			//echo $intEndDate."<br>";
- 			//echo "<pre>";
+			$intAssignedTo		= $line[5];
+			$intStatusId		= $line[6];
+			
+  			//echo "<pre>";
  			//print_r($line);
  			//echo "</pre>";
- 	
-			$taskId = $soapClient->addProjectTask($_SESSION['sessionId'],
-												$intGroupId,
-												$intGroupProjectId,
-												$strSummary,
-												$strDetails,
-												$intPriority,
-												$intHours,
-												$intStartDate,
-												$intEndDate,
-												$intCategoryId,
-												$intPercentComplete,
-												$arrAssignedTo,
-												$arrDependentOn,
-												$intDuration,
-												$intParentId);
-			//echo "Task # ".$taskId." created<br>";
-			$importedTasks[$lineCount]['taskId'] = $taskId;
-			$importedTasks[$lineCount]['trackerId'] = $trackerId;
-			$importedTasks[$lineCount]['groupId'] = $intGroupId;
-			$importedTasks[$lineCount]['groupProjectId'] = $intGroupProjectId;
-			$importedTasks[$lineCount]['summary'] = $strSummary;
+ 			
+ 			$query = "SELECT extra_field_id FROM artifact_extra_field_list WHERE alias='status' AND group_artifact_id=$intGroupArtifactId";
+			$aeflItem = $db->get_row($query);
+			$query = "SELECT element_id FROM artifact_extra_field_elements WHERE extra_field_id=$aeflItem->extra_field_id AND element_name='New'";
+			$aefeItem = $db->get_row($query);
 			
-			// TODO this should be compartmentalized and called
-			// Create tracker to task linkage
-			$query = "INSERT INTO project_task_artifact VALUES($taskId,$trackerId)";
-			if(!$db->query($query)) {
-				echo "Error creating tracker linkage from tracker $trackerId to task $taskId<br>";
-			}			
+			$arrExtraFieldsData = array('extra_field_id' => $aeflItem->extra_field_id,
+										'field_data' => $aefeItem->element_id);
+			
+			echo "<pre>";
+			print_r($arrExtraFieldsData);
+			echo "</pre>";
+			$trackerId = $soapClient->addArtifact($_SESSION['sessionId'],
+												 $intGroupId,
+												 $intGroupArtifactId,
+												 $intStatusId,
+												 $intPriority,
+												 $intAssignedTo,
+												 $strSummary,
+												 $strDetails,
+												 $arrExtraFieldsData
+												 );
+			exit;
 		}
-		echo"<h4>".$lineCount." task(s) processed</h4>";
+		echo"<h4>".$lineCount." story(ies) processed</h4>";
 		
 		// close file
 		fclose($filehandle);
@@ -187,8 +159,8 @@
       </div>
 
       <h1>Fusionforge Task Importer</h1>
-      <p>Use this tool to quickly bulk import tasks</p>
-      <p><strong>Download a sample file to get the layout <a href="sampleImportFile.csv">here</a></strong></p>
+      <p>Use this tool to quickly bulk import stories (trackers)</p>
+      <p><strong>Download a sample file to get the layout <a href="sampleStoryImport.csv">here</a></strong></p>
       <?php
       	//if(isset($_SESSION['sessionId']) && $_SESSION['sessionId'] != "") {
       	
@@ -198,7 +170,7 @@
       	//} else {
       ?>
       <!-- the form that uploads the file.  username & password necessary to login to the forge -->
-      <form class="well" name="importer" enctype="multipart/form-data" action="importTasks.php" method="post">
+      <form class="well" name="importer" enctype="multipart/form-data" action="importStories.php" method="post">
           <label>File to Import</label>
           <input type="file" name="file" class="span3">
 		  <label></label>

@@ -12,6 +12,7 @@
               <li class="active"><a href="index.php">Home</a></li>
               <!-- <li><a href="importStories.php">Import Stories</a></li> -->
               <li><a href="importTasks.php">Import Tasks</a></li>
+              <li><a href="importStories.php">Import Stories (Trackers)</a></li>
               <li><a href="logout.php">Logout</a></li>
             </ul>
           </div><!--/.nav-collapse -->
