@@ -78,7 +78,7 @@
 			$intPriority		= $line[4];
 			$intHours			= $line[5];
 			$intStartDate		= strtotime($line[6]." 12:00:00");
-			$intEndDate			= strtotime($line[7]." 23:59:59");
+			$intEndDate			= strtotime($line[7]." 13:00:00");
 			// if there's no category, set the default of 100 ('None')
 			$intCategoryId		= ("" == $line[8]) ? 100:$line[8];
 			$intPercentComplete	= $line[9];
