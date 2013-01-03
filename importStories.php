@@ -72,17 +72,17 @@
  			//print_r($line);
  			//echo "</pre>";
  			
- 			$query = "SELECT extra_field_id FROM artifact_extra_field_list WHERE alias='status' AND group_artifact_id=$intGroupArtifactId";
-			$aeflItem = $db->get_row($query);
-			$query = "SELECT element_id FROM artifact_extra_field_elements WHERE extra_field_id=$aeflItem->extra_field_id AND element_name='New'";
-			$aefeItem = $db->get_row($query);
+ 			//$query = "SELECT extra_field_id FROM artifact_extra_field_list WHERE alias='status' AND group_artifact_id=$intGroupArtifactId";
+			//$aeflItem = $db->get_row($query);
+			//$query = "SELECT element_id FROM artifact_extra_field_elements WHERE extra_field_id=$aeflItem->extra_field_id AND element_name='New'";
+			//$aefeItem = $db->get_row($query);
 			
-			$arrExtraFieldsData = array('extra_field_id' => $aeflItem->extra_field_id,
-										'field_data' => $aefeItem->element_id);
+			//$arrExtraFieldsData = array('extra_field_id' => $aeflItem->extra_field_id,
+			//							'field_data' => $aefeItem->element_id);
 			
-			echo "<pre>";
-			print_r($arrExtraFieldsData);
-			echo "</pre>";
+			//echo "<pre>";
+			//print_r($arrExtraFieldsData);
+			//echo "</pre>";
 			$trackerId = $soapClient->addArtifact($_SESSION['sessionId'],
 												 $intGroupId,
 												 $intGroupArtifactId,
@@ -90,10 +90,8 @@
 												 $intPriority,
 												 $intAssignedTo,
 												 $strSummary,
-												 $strDetails,
-												 $arrExtraFieldsData
+												 $strDetails
 												 );
-			exit;
 		}
 		echo"<h4>".$lineCount." story(ies) processed</h4>";
 		
