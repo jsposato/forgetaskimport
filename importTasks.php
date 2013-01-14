@@ -120,14 +120,13 @@
             if($importedTasks[$lineCount]['trackerId'] == null ||
                     $importedTasks[$lineCount]['trackerId'] == 0) {
                         
-                        continue;
+                // TODO this should be compartmentalized and called
+                // Create tracker to task linkage
+                $query = "INSERT INTO project_task_artifact VALUES($taskId,$trackerId)";
+                if(!$db->query($query)) {
+                    echo "Error creating tracker linkage from tracker $trackerId to task $taskId<br>";
+                }           
             }
-			// TODO this should be compartmentalized and called
-			// Create tracker to task linkage
-			$query = "INSERT INTO project_task_artifact VALUES($taskId,$trackerId)";
-			if(!$db->query($query)) {
-				echo "Error creating tracker linkage from tracker $trackerId to task $taskId<br>";
-			}			
 		}
 		echo"<h4>".$lineCount." task(s) processed</h4>";
 		
